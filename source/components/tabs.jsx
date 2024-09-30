@@ -1,5 +1,4 @@
-import { useRef, useMemo, useContext, forwardRef, createContext } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useMemo, useContext, forwardRef, createContext, useEffect } from 'react';
 
 import Ripples from './ripples.jsx';
 
@@ -29,16 +28,24 @@ export default function Tabs(props) {
 }
 
 let TabIndicator = forwardRef(function TabIndicator(props, ref) {
-	let { initial } = props;
+	let { keyframe } = props;
 
-	return (
-		<motion.div
-			ref={ref}
-			className="absolute bottom-0 w-full h-0.5 bg-zinc-800"
-			initial={initial}
-			animate={{ left: 0, width: '100%' }}
-		/>
-	);
+	useEffect(() => {
+		if (keyframe == undefined) return;
+
+		let keyframes = [keyframe, { left: 0, width: '100%' }];
+
+		let timing = {
+			fill: 'forwards',
+			easing: 'ease-out',
+			duration: 300,
+			iterations: 1,
+		};
+
+		ref.current.animate(keyframes, timing);
+	}, [ref, keyframe]);
+
+	return <div ref={ref} className="absolute bottom-0 w-full h-0.5 bg-zinc-800" />;
 });
 
 export function Tab(props) {
@@ -69,7 +76,7 @@ export function Tab(props) {
 
 	let indicatorRender;
 	if (tabSelected) {
-		let initial;
+		let keyframe;
 		let indicatorRef = tabsContextValue.indicatorRef;
 		if (indicatorRef.current != undefined) {
 			let tabRect = ref.current.getBoundingClientRect();
@@ -80,21 +87,17 @@ export function Tab(props) {
 				let width = `${(indicatorRect.width / tabRect.width) * 100}%`;
 				let left = `calc(${((indicatorCenter - tabRect.x) / tabRect.width) * 100}% - ${width} / 2)`;
 
-				initial = { width, left };
+				keyframe = { width, left };
 			}
 		}
 
-		indicatorRender = <TabIndicator ref={indicatorRef} initial={initial} />;
+		indicatorRender = <TabIndicator ref={indicatorRef} keyframe={keyframe} />;
 	}
 
 	let tabClassName = classnames('flex flex-col items-center gap-1 p-4', tabSelected ? 'opacity-100' : 'opacity-50');
 
 	return (
-		<button
-			ref={ref}
-			className="relative flex-auto max-w-[16rem] focus:outline-none focus-visible:bg-black/10 focus-visible:rounded-t"
-			onClick={handleClick}
-		>
+		<button ref={ref} className="relative flex-auto max-w-[16rem] focus:outline-none focus-visible:bg-black/10 focus-visible:rounded-t" onClick={handleClick}>
 			<div className={tabClassName}>
 				{iconRender}
 				{labelRender}

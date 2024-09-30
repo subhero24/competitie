@@ -17,7 +17,6 @@
 	"author": "Bruno Van Damme",
 	"license": "MIT",
 	"dependencies": {
-		"framer-motion": "^5.0.0",
 		"luxon": "^2.1.1",
 		"material-icons": "github:subhero24/material-icons",
 		"react": "^18.3.1",
