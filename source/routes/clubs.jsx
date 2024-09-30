@@ -3,7 +3,6 @@ import { useState, useMemo } from 'react';
 import { usePending, useData, useSearch, useResult, useHistory } from 'react-sprout';
 import { getClubs } from 'vttl-api';
 
-import List, { Listitem, ListitemText, ListitemSubtext, ListitemSpinner } from '../components/list.jsx';
 import Suspense from '../views/suspense.jsx';
 import SearchInput from '../views/search-input.jsx';
 import SpinnerView from '../views/spinner.jsx';
@@ -12,6 +11,7 @@ import ApplicationBar, { ApplicationBarTitle } from '../components/application-b
 
 import useDerivedState from '../hooks/use-derived-state.js';
 import useLoadingState from '../hooks/use-loading-state.js';
+import ClubsList from '../views/clubs-list.jsx';
 
 export async function fetchClubs(params, splat, search) {
 	if (search.search) {
@@ -93,12 +93,7 @@ export default function Clubs() {
 
 function ClubList(props) {
 	let { clubs: fetchedClubs, filter } = props;
-
 	let data = useData();
-	let pending = usePending();
-	let history = useHistory();
-	let [selectedClub, setSelectedClub] = useState();
-
 	let clubs = data ?? fetchedClubs;
 
 	let filteredClubs = useMemo(() => {
@@ -116,35 +111,5 @@ function ClubList(props) {
 		});
 	}, [clubs, filter]);
 
-	if (filteredClubs != undefined && filteredClubs.length === 0) {
-		return (
-			<div className="grid w-full h-full items-x-center items-y-center grid-cols-1 grid-rows-[1fr]">
-				No clubs found
-			</div>
-		);
-	} else if (filteredClubs != undefined && filteredClubs.length > 0) {
-		let listitemsRender = filteredClubs.map(function (club) {
-			function handleClick() {
-				setSelectedClub(club);
-				history.navigate(`/clubs/${club.id}`, { sticky: true });
-			}
-
-			let listitemDecorationRender;
-			if (pending && club === selectedClub) {
-				listitemDecorationRender = <ListitemSpinner />;
-			} else {
-				listitemDecorationRender = <ListitemSubtext>{club.id}</ListitemSubtext>;
-			}
-			return (
-				<Listitem key={club.id} role="link" onClick={handleClick}>
-					<div className="grid gap-4 grid-cols-[minmax(0,1fr),auto] items-y-center">
-						<ListitemText>{club.longname}</ListitemText>
-						{listitemDecorationRender}
-					</div>
-				</Listitem>
-			);
-		});
-
-		return <List>{listitemsRender}</List>;
-	}
+	return <ClubsList clubs={filteredClubs} />;
 }

@@ -27,6 +27,7 @@ import DivisionsCategory from './routes/divisions/category.jsx';
 import DivisionsIndex from './routes/divisions/index.jsx';
 import DivisionsRegional from './routes/divisions/regional.jsx';
 import DivisionsProvincial from './routes/divisions/provincial.jsx';
+import Favorites from './routes/favorites.jsx';
 
 export default Routes(
 	<Error>
@@ -63,6 +64,8 @@ export default Routes(
 				<PlayerMatches path="matches" />
 			</Player>
 			<Province path="provinces/:provinceUrl/clubs" data={fetchProvinceClubs} />
+
+			<Favorites path="favorites" />
 
 			<Redirect path="/" to="clubs" />
 			<Redirect path="players/:playerId" to="players/:playerId/results" />

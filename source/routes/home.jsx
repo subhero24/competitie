@@ -3,7 +3,7 @@ import { useHistory, useSplat, useLocation } from 'react-sprout';
 
 import NavigationBar, { NavigationBarItem } from '../components/navigation-bar.jsx';
 
-import { PeopleIcon, ExtensionIcon, SensorDoorIcon } from 'material-icons';
+import { PeopleIcon, ExtensionIcon, SensorDoorIcon, StarIcon } from 'material-icons';
 
 export default function Home(props) {
 	let { children } = props;
@@ -20,12 +20,18 @@ export default function Home(props) {
 	}
 
 	let navigationRender;
-	if (location.pathname === '/clubs' || location.pathname === '/players' || location.pathname === '/divisions') {
+	if (
+		location.pathname === '/favorites' ||
+		location.pathname === '/clubs' ||
+		location.pathname === '/players' ||
+		location.pathname === '/divisions'
+	) {
 		navigationRender = (
 			<NavigationBar defaultValue={segment} onChange={handleNavigationBarChange}>
 				<NavigationBarItem value="clubs" icon={SensorDoorIcon} label="Clubs" />
 				<NavigationBarItem value="players" icon={PeopleIcon} label="Players" />
 				<NavigationBarItem value="divisions" icon={ExtensionIcon} label="Divisions" />
+				<NavigationBarItem value="favorites" icon={StarIcon} label="Favorites" />
 			</NavigationBar>
 		);
 	}

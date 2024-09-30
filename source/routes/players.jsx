@@ -119,7 +119,7 @@ function PlayerList(props) {
 	return <PlayersList players={players} {...props} />;
 }
 
-function PlayersList(props) {
+export function PlayersList(props) {
 	let { players, selected, favorites, onFavoriteChange, onSelect } = props;
 
 	let pending = usePending();
