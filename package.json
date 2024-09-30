@@ -2,6 +2,7 @@
 	"name": "competitie",
 	"version": "0.0.1",
 	"description": "An application for the belgian table tennis competition",
+	"type": "module",
 	"scripts": {
 		"lint": "eslint source/**/*.{js,jsx}",
 		"build": "vite build",
@@ -19,18 +20,18 @@
 		"framer-motion": "^5.0.0",
 		"luxon": "^2.1.1",
 		"material-icons": "github:subhero24/material-icons",
-		"react": "^18.0.0-alpha-3c4c1c470-20211021",
-		"react-dom": "^18.0.0-alpha-3c4c1c470-20211021",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
 		"react-sprout": "^0.0.50-alpha-j9fu9majnjcs",
 		"vttl-api": "^1.3.2"
 	},
 	"devDependencies": {
 		"autoprefixer": "^10.4.12",
-		"eslint": "^8.1.0",
-		"eslint-plugin-react": "^7.26.1",
-		"eslint-plugin-react-hooks": "^4.2.1-alpha-9c8161ba8-20211028",
+		"eslint": "^8.57.0",
+		"eslint-plugin-react": "^7.37.0",
+		"eslint-plugin-react-hooks": "^4.6.2",
 		"postcss": "^8.4.16",
-		"tailwindcss": "^3.0.0-alpha.1",
+		"tailwindcss": "^3.4.13",
 		"tailwindcss-grid-placement": "^0.0.2",
 		"tailwindcss-padding-safe": "^1.0.5",
 		"vite": "^3.1.3"

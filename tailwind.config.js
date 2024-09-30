@@ -1,7 +1,10 @@
-const paddingSafePlugin = require('./lib/tailwindcss-padding-safe.js');
-const gridPlacementPlugin = require('tailwindcss-grid-placement');
+// const paddingSafePlugin = require('./lib/tailwindcss-padding-safe.js');
+// const gridPlacementPlugin = require('tailwindcss-grid-placement');
 
-module.exports = {
+import paddingSafePlugin from './lib/tailwindcss-padding-safe.js';
+import gridPlacementPlugin from 'tailwindcss-grid-placement';
+
+export default {
 	content: ['./source/**/*'],
 	theme: {
 		extend: {
