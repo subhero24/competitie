@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { useData, useSearch, useHistory, usePending } from 'react-sprout';
 import { getMembers } from 'vttl-api';
 
@@ -11,7 +11,6 @@ import ApplicationBar, { ApplicationBarTitle } from '../components/application-b
 
 import useLocalStorageState from '../hooks/use-local-storage-state.js';
 
-import sortBy from '../utilities/array/sort-by.js';
 import toTitleCase from '../utilities/string/to-title-case.js';
 
 export async function fetchPlayers(params, splat, search) {
@@ -28,32 +27,19 @@ export async function fetchPlayers(params, splat, search) {
 export default function Players() {
 	let search = useSearch();
 	let history = useHistory();
-	let mainRef = useRef();
 	let [selected, setSelected] = useState();
-	let [searchValue, setSearchValue] = useState(search.search ?? '');
 	let [favoritePlayers, setFavoritePlayers] = useLocalStorageState('favoritedPlayers', []);
-	let [players, setPlayers] = useState(favoritePlayers);
 
-	let sortedPlayers = useMemo(() => sortBy(players, 'ranking', 'id'), [players]);
-
-	function handleSearchInputChange(event, value) {
-		if (value === '') {
-			if (search.search) {
-				setPlayers(favoritePlayers);
-			}
-
-			history.navigate('players', { replace: true });
-		}
-
-		setSearchValue(value);
-	}
+	let mainRef = useRef();
+	let searchInputRef = useRef();
 
 	function handleSearchFormSubmit(event) {
 		event.preventDefault();
 		mainRef.current.focus();
 
-		if (searchValue !== '') {
-			history.navigate(`players?search=${encodeURIComponent(searchValue)}`, { replace: true });
+		let value = searchInputRef.current.value;
+		if (value !== '') {
+			history.navigate(`players?search=${encodeURIComponent(value)}`, { replace: true });
 		}
 	}
 
@@ -72,28 +58,13 @@ export default function Players() {
 		history.navigate(`/players/${player.id}`, { sticky: true });
 	}
 
+	useEffect(() => {
+		searchInputRef.current.focus();
+	}, [searchInputRef]);
+
 	let render;
 	if (search.search) {
-		render = (
-			<PlayerList
-				favorites={favoritePlayers}
-				selected={selected}
-				onFavoriteChange={handleFavoriteChange}
-				onSelect={handleSelect}
-			/>
-		);
-	} else if (players.length) {
-		render = (
-			<PlayersList
-				players={sortedPlayers}
-				selected={selected}
-				favorites={favoritePlayers}
-				onFavoriteChange={handleFavoriteChange}
-				onSelect={handleSelect}
-			/>
-		);
-	} else {
-		render = <div className="grid w-full h-full items-x-center items-y-center">No favorite players found</div>;
+		render = <PlayerList favorites={favoritePlayers} selected={selected} onFavoriteChange={handleFavoriteChange} onSelect={handleSelect} />;
 	}
 
 	return (
@@ -102,7 +73,7 @@ export default function Players() {
 				<div className="grid gap-4">
 					<ApplicationBarTitle>Players</ApplicationBarTitle>
 					<form className="grid" onSubmit={handleSearchFormSubmit}>
-						<SearchInput value={searchValue} onChange={handleSearchInputChange} />
+						<SearchInput ref={searchInputRef} defaultValue={search.search ?? ''} />
 					</form>
 				</div>
 			</ApplicationBar>
@@ -116,7 +87,11 @@ export default function Players() {
 function PlayerList(props) {
 	let players = useData();
 
-	return <PlayersList players={players} {...props} />;
+	if (players.length) {
+		return <PlayersList players={players} {...props} />;
+	} else {
+		return <div className="grid w-full h-full items-x-center items-y-center">No players found</div>;
+	}
 }
 
 export function PlayersList(props) {
@@ -149,9 +124,7 @@ export function PlayersList(props) {
 			if (pending && player === selected) {
 				listitemDecorationRender = <ListitemSpinner />;
 			} else {
-				listitemDecorationRender = (
-					<FavoriteIcon defaultValue={favorite} onChange={handleFavoriteChange} onClick={handleIconClick} />
-				);
+				listitemDecorationRender = <FavoriteIcon defaultValue={favorite} onChange={handleFavoriteChange} onClick={handleIconClick} />;
 			}
 
 			return (

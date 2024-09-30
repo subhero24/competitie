@@ -5,6 +5,7 @@ import Ripples from './ripples.jsx';
 import classnames from '../utilities/string/classnames.js';
 
 import useValue from '../hooks/use-value';
+import useOuterRef from '../hooks/use-outer-ref.js';
 
 let TabsContext = createContext({ value: undefined, onChange: undefined });
 
@@ -27,7 +28,9 @@ export default function Tabs(props) {
 	);
 }
 
-let TabIndicator = forwardRef(function TabIndicator(props, ref) {
+let TabIndicator = forwardRef(function TabIndicator(props, outerRef) {
+	let ref = useOuterRef(outerRef)
+
 	let { keyframe } = props;
 
 	useEffect(() => {
