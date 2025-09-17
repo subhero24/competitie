@@ -103,7 +103,7 @@ export function PlayersList(props) {
 		return <div className="grid w-full h-full items-x-center items-y-center">No players found</div>;
 	} else {
 		let playerListitemsRender = players.map(function (player) {
-			let { id, firstname, lastname, ranking } = player;
+			let { id, firstname, lastname, ranking, status } = player;
 
 			let name = `${toTitleCase(firstname)} ${toTitleCase(lastname)}`;
 			let favorite = favorites.find(player => player.id == id);
@@ -134,7 +134,10 @@ export function PlayersList(props) {
 
 						<div className="flex flex-col">
 							<ListitemText>{name}</ListitemText>
-							<ListitemSubtext>{id}</ListitemSubtext>
+							<ListitemSubtext>
+								{id}
+								{status === 'D' ? '-D' : ''}
+							</ListitemSubtext>
 						</div>
 						{listitemDecorationRender}
 					</div>

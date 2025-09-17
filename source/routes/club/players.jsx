@@ -65,10 +65,10 @@ function PlayersList(props) {
 	}
 
 	let playerListitemsRender = players.map(function (player) {
-		let { id, firstname, lastname, position, index, ranking } = player;
+		let { id, firstname, lastname, position, index, ranking, status } = player;
 
 		let playerName = toTitleCase(firstname) + ' ' + toTitleCase(lastname);
-		let playerInfo = id + ' - index ' + index;
+		let playerInfo = id + (status === 'D' ? '-D' : '') + ' - index ' + index;
 
 		function handleClick(event) {
 			onSelect?.(event, player);
